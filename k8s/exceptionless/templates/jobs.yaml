@@ -1,51 +1,3 @@
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  name: {{ template "exceptionless.fullname" . }}-jobs-cleanup-snapshot
-  labels:
-    app: {{ template "exceptionless.name" . }}
-    component: {{ template "exceptionless.fullname" . }}-jobs-cleanup-snapshot
-    tier: {{ template "exceptionless.fullname" . }}-job
-    chart: {{ template "exceptionless.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  schedule: "5 */1 * * *"
-  concurrencyPolicy: Forbid
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-            - name: {{ template "exceptionless.name" . }}-jobs-cleanup-snapshot
-              image: "{{ .Values.jobs.image.repository }}:{{ .Values.jobs.image.tag }}"
-              imagePullPolicy: {{ .Values.jobs.image.pullPolicy }}
-              livenessProbe:
-                httpGet:
-                  path: /health
-                  port: 80
-                initialDelaySeconds: 10
-                periodSeconds: 10
-              readinessProbe:
-                httpGet:
-                  path: /ready
-                  port: 80
-                initialDelaySeconds: 2
-                periodSeconds: 1
-              resources:
-                requests:
-                  memory: 75Mi
-                  cpu: 200m
-                limits:
-                  memory: 125Mi
-                  cpu: 400m
-              args: [CleanupSnapshot]
-              envFrom:
-                - configMapRef:
-                    name: {{ template "exceptionless.fullname" . }}-config
-          restartPolicy: OnFailure
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -325,54 +277,6 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ template "exceptionless.fullname" . }}-jobs-event-snapshot
-  labels:
-    app: {{ template "exceptionless.name" . }}
-    component: {{ template "exceptionless.fullname" . }}-jobs-event-snapshot
-    tier: {{ template "exceptionless.fullname" . }}-job
-    chart: {{ template "exceptionless.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  schedule: "0 */12 * * *"
-  concurrencyPolicy: Forbid
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-            - name: {{ template "exceptionless.name" . }}-jobs-event-snapshot
-              image: "{{ .Values.jobs.image.repository }}:{{ .Values.jobs.image.tag }}"
-              imagePullPolicy: {{ .Values.jobs.image.pullPolicy }}
-              livenessProbe:
-                httpGet:
-                  path: /health
-                  port: 80
-                initialDelaySeconds: 10
-                periodSeconds: 10
-              readinessProbe:
-                httpGet:
-                  path: /ready
-                  port: 80
-                initialDelaySeconds: 2
-                periodSeconds: 1
-              resources:
-                requests:
-                  memory: 75Mi
-                  cpu: 200m
-                limits:
-                  memory: 125Mi
-                  cpu: 400m
-              args: [EventSnapshot]
-              envFrom:
-                - configMapRef:
-                    name: {{ template "exceptionless.fullname" . }}-config
-          restartPolicy: OnFailure
-
----
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
   name: {{ template "exceptionless.fullname" . }}-jobs-migration
   labels:
     app: {{ template "exceptionless.name" . }}
@@ -580,54 +484,6 @@ spec:
           restartPolicy: OnFailure
 
 ---
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  name: {{ template "exceptionless.fullname" . }}-jobs-organization-snapshot
-  labels:
-    app: {{ template "exceptionless.name" . }}
-    component: {{ template "exceptionless.fullname" . }}-jobs-organization-snapshot
-    tier: {{ template "exceptionless.fullname" . }}-job
-    chart: {{ template "exceptionless.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  schedule: "30 * * * *"
-  concurrencyPolicy: Forbid
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-            - name: {{ template "exceptionless.name" . }}-jobs-organization-snapshot
-              image: "{{ .Values.jobs.image.repository }}:{{ .Values.jobs.image.tag }}"
-              imagePullPolicy: {{ .Values.jobs.image.pullPolicy }}
-              livenessProbe:
-                httpGet:
-                  path: /health
-                  port: 80
-                initialDelaySeconds: 10
-                periodSeconds: 10
-              readinessProbe:
-                httpGet:
-                  path: /ready
-                  port: 80
-                initialDelaySeconds: 2
-                periodSeconds: 1
-              resources:
-                requests:
-                  memory: 75Mi
-                  cpu: 200m
-                limits:
-                  memory: 125Mi
-                  cpu: 400m
-              args: [OrganizationSnapshot]
-              envFrom:
-                - configMapRef:
-                    name: {{ template "exceptionless.fullname" . }}-config
-          restartPolicy: OnFailure
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -740,54 +596,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ template "exceptionless.fullname" . }}-config
-
----
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  name: {{ template "exceptionless.fullname" . }}-jobs-stack-snapshot
-  labels:
-    app: {{ template "exceptionless.name" . }}
-    component: {{ template "exceptionless.fullname" . }}-jobs-stack-snapshot
-    tier: {{ template "exceptionless.fullname" . }}-job
-    chart: {{ template "exceptionless.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  schedule: "40 * * * *"
-  concurrencyPolicy: Forbid
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-            - name: {{ template "exceptionless.name" . }}-jobs-stack-snapshot
-              image: "{{ .Values.jobs.image.repository }}:{{ .Values.jobs.image.tag }}"
-              imagePullPolicy: {{ .Values.jobs.image.pullPolicy }}
-              livenessProbe:
-                httpGet:
-                  path: /health
-                  port: 80
-                initialDelaySeconds: 10
-                periodSeconds: 10
-              readinessProbe:
-                httpGet:
-                  path: /ready
-                  port: 80
-                initialDelaySeconds: 2
-                periodSeconds: 1
-              resources:
-                requests:
-                  memory: 75Mi
-                  cpu: 200m
-                limits:
-                  memory: 125Mi
-                  cpu: 400m
-              args: [StackSnapshot]
-              envFrom:
-                - configMapRef:
-                    name: {{ template "exceptionless.fullname" . }}-config
-          restartPolicy: OnFailure
 
 ---
 apiVersion: apps/v1
