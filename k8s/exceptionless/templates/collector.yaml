@@ -40,8 +40,8 @@ spec:
             httpGet:
               path: /ready
               port: 80
-            initialDelaySeconds: 2
-            periodSeconds: 1
+            initialDelaySeconds: 3
+            periodSeconds: 3
           resources:
             requests:
               memory: 400Mi
