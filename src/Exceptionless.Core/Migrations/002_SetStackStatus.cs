@@ -51,7 +51,7 @@ namespace Exceptionless.Core.Migrations {
                 await Task.Delay(delay);
             } while (true);
 
-            _logger.LogInformation("Finished adding stack status: Time={Duration:d\\.hh\\:mm} Completed={Completed:N0} Total={Total:N0} Errors={Errors:N0}", sw.Elapsed, stackResponse.Total, stackResponse.Failures.Count);
+            _logger.LogInformation("Finished adding stack status: Time={Duration:d\\.hh\\:mm} Completed={Completed:N0} Total={Total:N0} Errors={Errors:N0}", sw.Elapsed, stackResponse.Updated, stackResponse.Total, stackResponse.Failures.Count);
         }
     }
 }
